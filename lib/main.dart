@@ -1,41 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/products_provider.dart';
+import 'package:shop_app/screens/product_detail_screen.dart';
+import 'package:shop_app/screens/products_overview_screen.dart';
 
 void main() {
+  //Provider.debugCheckInvalidValueType = null;
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("My Shop"),
-      ),
-      body: const Center(
-        child: Text('Let\'s build a shop'),
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => Products(),
+      child: MaterialApp(
+        title: 'MyShop',
+        theme: ThemeData(
+            colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
+                .copyWith(secondary: Colors.deepOrange),
+            fontFamily: 'Lato'),
+        debugShowCheckedModeBanner: false,
+        home: const ProductsOverviewScreen(),
+        routes: {
+          ProductDetailScreen.routeName: (context) =>
+              const ProductDetailScreen(),
+        },
       ),
     );
   }
