@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
@@ -63,7 +64,9 @@ class ProductItem extends StatelessWidget {
                   action: SnackBarAction(
                     label: 'UNDO',
                     onPressed: () {
-                      print('Hello World');
+                      if (kDebugMode) {
+                        print('Hello World');
+                      }
                       cart.removeSingleItem(product.id);
                     },
                   ),
