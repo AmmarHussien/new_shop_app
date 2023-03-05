@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/providers/product.dart';
-import 'package:shop_app/providers/products_provider.dart';
 
-class EditProductsScreen extends StatefulWidget {
-  const EditProductsScreen({super.key});
-  static const routeName = '/edit-product';
+import '../providers/product.dart';
+import '../providers/products_provider.dart';
+
+class AddProductsScreen extends StatefulWidget {
+  const AddProductsScreen({super.key});
+  static const routeName = '/add-product';
 
   @override
-  State<EditProductsScreen> createState() => _EditProductsScreenState();
+  State<AddProductsScreen> createState() => _AddProductsScreenState();
 }
 
-class _EditProductsScreenState extends State<EditProductsScreen> {
+class _AddProductsScreenState extends State<AddProductsScreen> {
   final _priceFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
@@ -26,13 +27,13 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
   );
 
   var _isInit = true;
+  var _isLoading = false;
   var _initValues = {
     'title': '',
     'description': '',
     'price': '',
     'imageUrl': '',
   };
-  var _isLoading = false;
 
   @override
   void initState() {
@@ -85,21 +86,39 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
     }
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     final isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
     }
     _form.currentState!.save();
     setState(() {
-      _isLoading = true;
+      _isLoading = false;
     });
-
-    if (_editedProduct.id != null) {
-      Provider.of<Products>(context, listen: false).updateProduct(
-        _editedProduct.id,
-        _editedProduct,
+    try {
+      await Provider.of<Products>(context, listen: false)
+          .addProduct(_editedProduct);
+    } catch (error) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text(
+            'An Error occurred!',
+          ),
+          content: const Text(
+              //error.toString(),
+              'Something went wrong.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
       );
+    } finally {
       setState(() {
         _isLoading = false;
       });
