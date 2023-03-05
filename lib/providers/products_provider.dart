@@ -76,6 +76,7 @@ class Products with ChangeNotifier {
 
     _items.add(newProduct);
     //_items.insert(0, newProduct);// at tha start of the list
+    print('add new items');
     notifyListeners();
   }
 
@@ -94,4 +95,8 @@ class Products with ChangeNotifier {
     // notifyListeners();
   }
 
+  void deleteProducts(String id) {
+    _items.removeWhere((prod) => prod.id == id);
+    notifyListeners();
+  }
 }
