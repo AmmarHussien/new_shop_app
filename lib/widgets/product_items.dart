@@ -29,7 +29,7 @@ class ProductItem extends StatelessWidget {
           leading: Consumer<Product>(
             builder: (context, product, child) => IconButton(
               icon: Icon(
-                product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                product.isFavorite! ? Icons.favorite : Icons.favorite_border,
               ),
               onPressed: () {
                 product.toggleFavoriteStatus(
@@ -37,7 +37,7 @@ class ProductItem extends StatelessWidget {
                   authdata.userId!,
                 );
               },
-              color: product.isFavorite ? Colors.deepOrange : Colors.grey,
+              color: product.isFavorite! ? Colors.deepOrange : Colors.grey,
             ),
           ),
           title: Text(
