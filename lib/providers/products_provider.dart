@@ -43,6 +43,13 @@ class Products with ChangeNotifier {
   ];
   // var _showFavoritesOnly = false;
 
+  final String authTokan;
+
+  Products(
+    this.authTokan,
+    this._items,
+  );
+
   List<Product> get items {
     // if (_showFavoritesOnly) {
     //   return _items.where((prodItem) => prodItem.isFavorite).toList();
@@ -69,11 +76,14 @@ class Products with ChangeNotifier {
   // }
 
   Future<void> fatchAndSetProducts() async {
-    final url = Uri.https(
-        'shopapp-f403f-default-rtdb.firebaseio.com', '/products.json');
+    final url = Uri.https('shopapp-f403f-default-rtdb.firebaseio.com',
+        '/products.json', {'auth': authTokan});
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return;
+      }
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(
