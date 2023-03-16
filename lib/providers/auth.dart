@@ -104,4 +104,11 @@ class Auth with ChangeNotifier {
     //   ),
     //);
   }
+
+  void logout() {
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
+    notifyListeners();
+  }
 }
