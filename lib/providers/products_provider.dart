@@ -44,9 +44,11 @@ class Products with ChangeNotifier {
   // var _showFavoritesOnly = false;
 
   final String authTokan;
+  final String userId;
 
   Products(
     this.authTokan,
+    this.userId,
     this._items,
   );
 
@@ -76,7 +78,7 @@ class Products with ChangeNotifier {
   // }
 
   Future<void> fatchAndSetProducts() async {
-    final url = Uri.https('shopapp-f403f-default-rtdb.firebaseio.com',
+    var url = Uri.https('shopapp-f403f-default-rtdb.firebaseio.com',
         '/products.json', {'auth': authTokan});
     try {
       final response = await http.get(url);
@@ -84,6 +86,10 @@ class Products with ChangeNotifier {
       if (extractedData == null) {
         return;
       }
+      url = Uri.https('shopapp-f403f-default-rtdb.firebaseio.com',
+          '/userFavorites/$userId.json', {'auth': authTokan});
+      final favoriteResponse = await http.get(url);
+      final favoriteDate = json.decode(favoriteResponse.body);
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(
@@ -93,8 +99,8 @@ class Products with ChangeNotifier {
             description: prodData['description'],
             price: prodData['price'],
             imageUrl: prodData['imageUrl'],
-            isFavorite: prodData['isFavorite'],
-            
+            isFavorite:
+                favoriteDate == null ? false : favoriteDate[prodId] ?? false,
           ),
         );
       });
@@ -116,7 +122,6 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'isFavorite': product.isFavorite,
         }),
       );
       final newProduct = Product(
