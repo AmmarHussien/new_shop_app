@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/orders.dart';
-import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/providers/products_provider.dart';
 import 'package:shop_app/screens/add_products_screen.dart';
 import 'package:shop_app/screens/auth_screen.dart';
@@ -12,6 +11,7 @@ import 'package:shop_app/screens/edit_products_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 import 'package:shop_app/screens/products_overview_screen.dart';
+import 'package:shop_app/screens/splach_screen.dart';
 import 'package:shop_app/screens/user_products.dart';
 
 void main() {
@@ -62,12 +62,21 @@ class MyApp extends StatelessWidget {
         builder: (context, auth, _) => MaterialApp(
           title: 'MyShop',
           theme: ThemeData(
-              colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
-                  .copyWith(secondary: Colors.deepOrange),
-              fontFamily: 'Lato'),
+            colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
+                .copyWith(secondary: Colors.deepOrange),
+            fontFamily: 'Lato',
+          ),
           debugShowCheckedModeBanner: false,
-          home:
-              auth.isAuth ? const ProductsOverviewScreen() : const AuthScreen(),
+          home: auth.isAuth
+              ? const ProductsOverviewScreen()
+              : FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (ctx, authResultSnapshot) =>
+                      ((authResultSnapshot.connectionState ==
+                              ConnectionState.waiting)
+                          ? const SplachScreen()
+                          : const AuthScreen()),
+                ),
           routes: {
             ProductDetailScreen.routeName: (context) =>
                 const ProductDetailScreen(),

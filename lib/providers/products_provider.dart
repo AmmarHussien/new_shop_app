@@ -88,8 +88,8 @@ class Products with ChangeNotifier {
       if (extractedData == null) {
         return;
       }
-      url = Uri.https('shopapp-f403f-default-rtdb.firebaseio.com',
-          '/userFavorites/$userId.json', {'auth': authTokan});
+      url = Uri.parse(
+          'https://shopapp-f403f-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authTokan');
       final favoriteResponse = await http.get(url);
       final favoriteDate = json.decode(favoriteResponse.body);
       final List<Product> loadedProducts = [];
