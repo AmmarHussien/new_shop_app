@@ -27,7 +27,6 @@ class _AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _controller = AnimationController(
       vsync: this,
@@ -47,7 +46,7 @@ class _AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    super.dispose();
     _controller.dispose();
   }
 
@@ -145,16 +144,20 @@ class _AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         borderRadius: BorderRadius.circular(10.0),
       ),
       elevation: 8.0,
-      child: Container(
-        //height: _authMode == AuthMode.Signup ? 320 : 260,
-        height: _heightAnimation.value.height,
-        constraints:
-            //BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
-            BoxConstraints(
-          minHeight: _heightAnimation.value.height,
+      child: AnimatedBuilder(
+        animation: _heightAnimation,
+        builder: (context, ch) => Container(
+          //height: _authMode == AuthMode.Signup ? 320 : 260,
+          height: _heightAnimation.value.height,
+          constraints:
+              //BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
+              BoxConstraints(
+            minHeight: _heightAnimation.value.height,
+          ),
+          width: deviceSize.width * 0.75,
+          padding: const EdgeInsets.all(16.0),
+          child: ch,
         ),
-        width: deviceSize.width * 0.75,
-        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -164,7 +167,9 @@ class _AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                   decoration: const InputDecoration(labelText: 'E-Mail'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    if (value!.isEmpty || !value.contains('@')) {
+                    if (value!.isEmpty ||
+                        !value.contains('@') ||
+                        !value.contains('.')) {
                       return 'Invalid email!';
                     }
                     return null;
@@ -220,8 +225,10 @@ class _AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                       ),
                       textStyle: MaterialStateProperty.all(
                         TextStyle(
-                          color:
-                              Theme.of(context).primaryTextTheme.button!.color,
+                          color: Theme.of(context)
+                              .primaryTextTheme
+                              .labelLarge!
+                              .color,
                         ),
                       ),
                       backgroundColor: MaterialStateProperty.all(
