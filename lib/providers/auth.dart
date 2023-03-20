@@ -100,7 +100,6 @@ class Auth with ChangeNotifier {
     String email,
     String password,
   ) async {
-    print(_expiryDate.toString());
     return _authenticate(email, password, 'signInWithPassword');
 
     // final url = Uri.parse(
